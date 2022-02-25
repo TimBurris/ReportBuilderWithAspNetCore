@@ -1,2 +1,3 @@
-# ReportBuilderWithAspNetCore
-a sample demonstration of using Micrsoft Report Builder to create an rdl and export that to pdf from c#
+
+this is the source code from my Youtube demonstration
+[Microsoft Report Builder with POCOs from ASP.NET Core](https://youtu.be/8ilSupSWqGQ)
