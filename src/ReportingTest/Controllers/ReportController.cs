@@ -13,10 +13,12 @@ namespace ReportingTest.Controllers
         }
         public IActionResult Index()
         {
-            string filePath = Path.Join(_webHostEnvironment.ContentRootPath, "Reports\\ReportAlpha.rdl");
-            using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            try
             {
-                List<PurchaseOrder> purchaseOrders = new List<PurchaseOrder>()
+                string filePath = Path.Join(_webHostEnvironment.ContentRootPath, "Reports\\ReportAlpha.rdl");
+                using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    List<PurchaseOrder> purchaseOrders = new List<PurchaseOrder>()
                 {
                     new PurchaseOrder()
                     {
@@ -25,7 +27,7 @@ namespace ReportingTest.Controllers
                     }
                 };
 
-                List<LineItem> lineItems = new List<LineItem>() {
+                    List<LineItem> lineItems = new List<LineItem>() {
                     new LineItem()
                     {
                         Amount=(53.59).ToString("C"),
@@ -37,14 +39,19 @@ namespace ReportingTest.Controllers
                         Material="Stuff"
                     }
                 };
-                LocalReport report = new();
-                report.LoadReportDefinition(fileStream);
-                report.DataSources.Add(new ReportDataSource(name: "PurchaseOrder", purchaseOrders));
-                report.DataSources.Add(new ReportDataSource(name: "LineItem", lineItems));
+                    LocalReport report = new();
+                    report.LoadReportDefinition(fileStream);
+                    report.DataSources.Add(new ReportDataSource(name: "PurchaseOrder", purchaseOrders));
+                    report.DataSources.Add(new ReportDataSource(name: "LineItem", lineItems));
 
-                byte[] pdfData = report.Render(format: "PDF");
+                    byte[] pdfData = report.Render(format: "PDF");
 
-                return File(pdfData, contentType: "application/pdf");
+                    return File(pdfData, contentType: "application/pdf");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content("error: " + ex.Message);
             }
         }
     }
